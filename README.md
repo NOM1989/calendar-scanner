@@ -8,3 +8,5 @@ The intended use case is to remind you of important events in a friend's calenda
 
 ### Installation
 You will have to set up an OpenAI API key in addition to a Google Project with the Calendar scope to give it access to your calendar(s).
+
+Set up a cron job to run this script every morning at 9am, ideally place it on a machine permanently connected to the internet.
