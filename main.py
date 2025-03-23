@@ -8,14 +8,6 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
-# Configure logging to output to a file with timestamp and log level
-logging.basicConfig(
-    filename="reminder.log",
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-)
-
-client = OpenAI()
 
 # ID of your calendar to add the reminder event to, can be found in Google Calendar UI
 YOUR_CALENDAR_ID = ""
@@ -27,6 +19,17 @@ SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
 PATH_TO_TOKEN = ""
 PATH_TO_CREDENTIALS = ""
+PATH_TO_LOG = ""
+
+
+# Configure logging to output to a file with timestamp and log level
+logging.basicConfig(
+    filename=PATH_TO_LOG,
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+)
+
+client = OpenAI()
 
 
 def authenticate_google_calendar():
@@ -42,7 +45,9 @@ def authenticate_google_calendar():
             except Exception as e:
                 logging.error("Error refreshing credentials: %s", str(e))
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(PATH_TO_CREDENTIALS, SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(
+                PATH_TO_CREDENTIALS, SCOPES
+            )
             creds = flow.run_local_server(port=0)
             logging.info("Alternative credentials refresh?")
         with open(PATH_TO_TOKEN, "w") as token:
