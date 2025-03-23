@@ -25,11 +25,14 @@ OTHER_CALENDAR_ID = ""
 REMINDER_PREPEND = ""
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
+PATH_TO_TOKEN = ""
+PATH_TO_CREDENTIALS = ""
+
 
 def authenticate_google_calendar():
     creds = None
-    if os.path.exists("token.json"):
-        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+    if os.path.exists(PATH_TO_TOKEN):
+        creds = Credentials.from_authorized_user_file(PATH_TO_TOKEN, SCOPES)
         logging.info("Loaded credentials from token.json")
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
@@ -39,10 +42,10 @@ def authenticate_google_calendar():
             except Exception as e:
                 logging.error("Error refreshing credentials: %s", str(e))
         else:
-            flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(PATH_TO_CREDENTIALS, SCOPES)
             creds = flow.run_local_server(port=0)
             logging.info("Alternative credentials refresh?")
-        with open("token.json", "w") as token:
+        with open(PATH_TO_TOKEN, "w") as token:
             token.write(creds.to_json())
             logging.info("Saved credentials to token.json")
     service = build("calendar", "v3", credentials=creds)
